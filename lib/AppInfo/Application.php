@@ -38,6 +38,7 @@ use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\Comments\CommentsEntityEvent;
 use OCP\Comments\ICommentsManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use OCP\EventDispatcher\IEventDispatcher;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'announcementcenter';
@@ -50,6 +51,10 @@ class Application extends App implements IBootstrap {
 		$context->registerDashboardWidget(Widget::class);
 		$context->registerEventListener(BeforeTemplateRenderedEvent::class, BeforeTemplateRenderedListener::class);
 		$context->registerNotifierService(Notifier::class);
+		$dispatcher = $this->getContainer()->query(IEventDispatcher::class);
+		$dispatcher->addListener('OCA\Files::loadAdditionalScripts', function() {
+			\OCP\Util::addScript(self::APP_ID, 'newannounce');
+		});
 	}
 
 	public function boot(IBootContext $context): void {
