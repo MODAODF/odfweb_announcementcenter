@@ -127,6 +127,7 @@ class APIController extends OCSController {
 		$userId = $user instanceof IUser ? $user->getUID() : '';
 
 		try {
+			$comments = false; // 強制停用留言
 			$announcement = $this->manager->announce($subject, $message, $plainMessage, $userId, $this->timeFactory->getTime(), $groups, $comments);
 		} catch (InvalidArgumentException $e) {
 			return new DataResponse(
@@ -136,20 +137,12 @@ class APIController extends OCSController {
 		}
 
 		if ($activities || $notifications || $emails) {
-			// 不要 BackgroundJob
-			// $this->jobList->add(BackgroundJob::class, [
-			// 	'id' => $announcement->getId(),
-			// 	'activities' => $activities,
-			// 	'notifications' => $notifications,
-			// 	'emails' => $emails,
-			// ]);
-
-			// 新增 notification
+			// 不要 BackgroundJob, 直接新增 notification
 			$args = [
 				'id' => $announcement->getId(),
-				'activities' => $activities,
+				'activities' => false, // 強制停用
 				'notifications' => $notifications,
-				'emails' => $emails,
+				'emails' => false, // 強制停用
 			];
 			$this->backgroundJob->createPublicity($announcement, $args);
 		}

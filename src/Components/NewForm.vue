@@ -44,20 +44,8 @@
 
 			<Actions>
 				<ActionCheckbox value="1"
-					:checked.sync="createActivities">
-					{{ t('announcementcenter', 'Create activities') }}
-				</ActionCheckbox>
-				<ActionCheckbox value="1"
 					:checked.sync="createNotifications">
 					{{ t('announcementcenter', 'Create notifications') }}
-				</ActionCheckbox>
-				<ActionCheckbox value="1"
-					:checked.sync="sendEmails">
-					{{ t('announcementcenter', 'Send emails') }}
-				</ActionCheckbox>
-				<ActionCheckbox value="1"
-					:checked.sync="allowComments">
-					{{ t('announcementcenter', 'Allow comments') }}
 				</ActionCheckbox>
 				<ActionInput v-model="groups"
 					icon="icon-group"
