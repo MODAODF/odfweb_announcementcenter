@@ -52,7 +52,6 @@ nbproject
 
 # Tests - auto-generated files
 /build
-/js
 /node_modules
 /.php_cs.cache
 /tests/coverage*
