@@ -55,20 +55,8 @@
 					{{ t('announcementcenter', 'Everyone') }}
 				</NcActionInput>
 				<NcActionCheckbox value="1"
-					:checked.sync="createActivities">
-					{{ t('announcementcenter', 'Create activities') }}
-				</NcActionCheckbox>
-				<NcActionCheckbox value="1"
 					:checked.sync="createNotifications">
 					{{ t('announcementcenter', 'Create notifications') }}
-				</NcActionCheckbox>
-				<NcActionCheckbox value="1"
-					:checked.sync="sendEmails">
-					{{ t('announcementcenter', 'Send emails') }}
-				</NcActionCheckbox>
-				<NcActionCheckbox value="1"
-					:checked.sync="allowComments">
-					{{ t('announcementcenter', 'Allow comments') }}
 				</NcActionCheckbox>
 			</NcActions>
 		</div>
