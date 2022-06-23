@@ -3,14 +3,12 @@
 app_name=announcementcenter
 
 project_dir=$(CURDIR)/../$(app_name)
-build_dir=$(CURDIR)/build/artifacts
-appstore_dir=$(build_dir)/appstore
-source_dir=$(build_dir)/source
+build_dir=$(CURDIR)/build/
 sign_dir=$(build_dir)/sign
 package_name=$(app_name)
-cert_dir=$(HOME)/.nextcloud/certificates
 version+=master
 composer=$(shell which composer 2> /dev/null)
+BRANCH:=$(shell cat dist_git_branch 2> /dev/null || git rev-parse --abbrev-ref HEAD 2> /dev/null)
 
 all: appstore
 
@@ -92,7 +90,6 @@ appstore: dev-setup build-js-production
 	--exclude=/tests \
 	--exclude=/vendor \
 	--exclude=/.eslintrc.js \
-	--exclude=/.l10nignore \
 	--exclude=/.php_cs.cache \
 	--exclude=/.php_cs.dist \
 	--exclude=/.gitattributes \
@@ -100,27 +97,16 @@ appstore: dev-setup build-js-production
 	--exclude=/.scrutinizer.yml \
 	--exclude=/.travis.yml \
 	--exclude=/babel.config.js \
-	--exclude=/composer.json \
-	--exclude=/composer.lock \
 	--exclude=/Makefile \
-	--exclude=/package.json \
-	--exclude=/package-lock.json \
-	--exclude=/psalm.xml \
 	--exclude=/README.md \
 	--exclude=/stylelint.config.js \
 	--exclude=/webpack.js \
-	$(project_dir)/ $(sign_dir)/$(app_name)
-	@if [ -f $(cert_dir)/$(app_name).key ]; then \
-		echo "Signing app files…"; \
-		php ../../occ integrity:sign-app \
-			--privateKey=$(cert_dir)/$(app_name).key\
-			--certificate=$(cert_dir)/$(app_name).crt\
-			--path=$(sign_dir)/$(app_name); \
-	fi
-	tar -czf $(build_dir)/$(app_name).tar.gz \
+	--exclude=/package.json \
+    --exclude=/package-lock.json \
+    --exclude=/CHANGELOG.md \
+    --exclude=/composer.json \
+    --exclude=/composer.lock \
+	--exclude=/COPYING \
+	$(CURDIR)/ $(sign_dir)/$(app_name)
+	tar -czf $(build_dir)/$(app_name)-$(version)-$(BRANCH).tar.gz \
 		-C $(sign_dir) $(app_name)
-	@if [ -f $(cert_dir)/$(app_name).key ]; then \
-		echo "Signing package…"; \
-		openssl dgst -sha512 -sign $(cert_dir)/$(app_name).key $(build_dir)/$(app_name).tar.gz | openssl base64; \
-	fi
-
