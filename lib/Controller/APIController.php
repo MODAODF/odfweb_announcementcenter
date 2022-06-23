@@ -53,6 +53,7 @@ class APIController extends OCSController {
 	protected ITimeFactory $timeFactory;
 	protected IUserSession $userSession;
 	protected LoggerInterface $logger;
+	protected BackgroundJob $backgroundJob;
 
 	public function __construct(string $appName,
 		IRequest $request,
@@ -63,7 +64,8 @@ class APIController extends OCSController {
 		Manager $manager,
 		ITimeFactory $timeFactory,
 		IUserSession $userSession,
-		LoggerInterface $logger) {
+		LoggerInterface $logger,
+		BackgroundJob $backgroundJob) {
 		parent::__construct($appName, $request);
 
 		$this->groupManager = $groupManager;
@@ -74,6 +76,7 @@ class APIController extends OCSController {
 		$this->timeFactory = $timeFactory;
 		$this->userSession = $userSession;
 		$this->logger = $logger;
+		$this->backgroundJob = $backgroundJob;
 	}
 
 	/**
@@ -122,12 +125,22 @@ class APIController extends OCSController {
 		}
 
 		if ($activities || $notifications || $emails) {
-			$this->jobList->add(BackgroundJob::class, [
+			// 不要 BackgroundJob
+			// $this->jobList->add(BackgroundJob::class, [
+			// 	'id' => $announcement->getId(),
+			// 	'activities' => $activities,
+			// 	'notifications' => $notifications,
+			// 	'emails' => $emails,
+			// ]);
+
+			// 新增 notification
+			$args = [
 				'id' => $announcement->getId(),
 				'activities' => $activities,
 				'notifications' => $notifications,
 				'emails' => $emails,
-			]);
+			];
+			$this->backgroundJob->createPublicity($announcement, $args);
 		}
 
 		$this->logger->info('Admin ' . $userId . ' posted a new announcement: "' . $announcement->getSubject() . '"');
