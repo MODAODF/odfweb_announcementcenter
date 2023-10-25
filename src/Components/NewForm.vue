@@ -27,7 +27,8 @@
 			name="subject"
 			minlength="1"
 			maxlength="512"
-			:placeholder="t('announcementcenter', 'New announcement subject')">
+			:placeholder="t('announcementcenter', 'New announcement subject')"
+			:aria-label="t('announcementcenter', 'New announcement subject')">
 
 		<textarea v-model="message"
 			class="announcement__form__message"
