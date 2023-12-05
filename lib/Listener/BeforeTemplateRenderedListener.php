@@ -28,6 +28,7 @@ use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Util;
+use OCP\App\IAppManager;
 
 /**
  * @template-implements IEventListener<Event>
@@ -39,5 +40,10 @@ class BeforeTemplateRenderedListener implements IEventListener {
 		}
 
 		Util::addStyle(Application::APP_ID, Application::APP_ID . '-global');
+
+		$appManager = \OC::$server->get(IAppManager::class);
+        if ($appManager->getAppInfo('notifications')) {
+            Util::addScript('announcementcenter', 'announcementcenter-newannounce');
+        }
 	}
 }
