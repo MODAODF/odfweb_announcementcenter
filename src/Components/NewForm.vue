@@ -43,7 +43,12 @@
 			</NcButton>
 
 			<NcActions>
+				<NcActionCheckbox value="1"
+					:checked.sync="createNotifications">
+					{{ t('announcementcenter', 'Create notifications') }}
+				</NcActionCheckbox>
 				<NcActionInput v-model="groups"
+					class="announcement__ncactioninput"
 					icon="icon-group"
 					type="multiselect"
 					:options="groupOptions"
@@ -54,10 +59,6 @@
 					@search-change="onSearchChanged">
 					{{ t('announcementcenter', 'Everyone') }}
 				</NcActionInput>
-				<NcActionCheckbox value="1"
-					:checked.sync="createNotifications">
-					{{ t('announcementcenter', 'Create notifications') }}
-				</NcActionCheckbox>
 			</NcActions>
 		</div>
 	</div>
@@ -185,5 +186,9 @@ export default {
 			margin-right: 10px;
 		}
 	}
+}
+
+.announcement__ncactioninput {
+	height: 175px;
 }
 </style>
